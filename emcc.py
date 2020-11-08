@@ -2139,6 +2139,12 @@ There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR P
   # specified by the user
   shared.Settings.EXPORTED_FUNCTIONS = dedup_list(shared.Settings.EXPORTED_FUNCTIONS)
 
+  if options.oformat == OFormat.WASM:
+    # If we are outputing directly to wasm we won't be running the JS compiler post
+    # link so we enable LLD_REPORT_UNDEFINED.  In this mode, the JS compiler is run
+    # before lld so that we can determine the list valid undefined symbols.
+    shared.Settings.LLD_REPORT_UNDEFINED = 1
+
   with ToolchainProfiler.profile_block('link'):
     logger.debug('linking: ' + str(linker_inputs))
 
